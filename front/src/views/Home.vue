@@ -10,7 +10,7 @@
 
     <div class="row">
       <div class="col s12 m6 l8">
-         <div class="card light-blue  z-depth-3">
+         <div class="card light-blue bill-card  z-depth-3">
           <div class="card-content white-text">
             <span class="card-title">Wallets</span>
             <table class="highlight">
@@ -23,7 +23,7 @@
 
        <tbody>
          <!-- проваливаемся в history, отфильтрованную по валлету   -->
-         <router-link tag="tr" to="/history" v-for="wallet in this.$store.state.wallets" :key="wallet.id">
+         <router-link tag="tr" to="/history" v-for="wallet in displayedPosts" :key="wallet.id">
            <td>{{wallet.id}}</td>
            <td>{{wallet.amount}}</td>
          </router-link>
@@ -33,6 +33,8 @@
           </div>
          </div>
       </div>
+
+
 
 
 
@@ -56,35 +58,84 @@
               <tr>
                 <td><p class="currency-line">
                   <span>IGS Coin </span>
-                </p>IGS Coin</td>
-                <td>{{this.$store.state.totalAmount}}</td>
+                </p></td>
 
+                  <td><p class="currency-line"><span>{{this.$store.state.totalAmount}}</span>
+                </p></td>
               </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
+
+
     </div>
+    <ul class="pagination">
+       <li class="waves-effect page-link"><a href="#!"  v-if="page != 1" @click.prevent="page--"><i class="material-icons">chevron_left</i></a></li>
+
+       <li class="waves-effect page-link" v-for="pageNumber in pages" @click.prevent="page = pageNumber"><a href="#!">{{pageNumber}}</a></li>
+
+       <li class="waves-effect page-link" @click.prevent="page++" v-if="page < pages.length"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+     </ul>
+
   </div>
+
 </template>
 <script>
 import UserService from '@/service/UserService'
 export default {
   name: 'Home',
+  data: () => ({
+    posts : [],
+      page: 1,
+      perPage: 3,
+      pages: [],
+      currentPageClass:'' ,
+  }),
   methods: {
     rememberMe () {
       this.remember = !this.remember
     },
     reload () {
       window.location.reload()
+    },
+  getPosts () {
+    let data = [];
+      this.posts = this.$store.state.wallets;
+
+  },
+  setPages () {
+    let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+    for (let index = 1; index <= numberOfPages; index++) {
+      this.pages.push(index);
     }
   },
-  mounted () {
-
+  paginate (posts) {
+    let page = this.page;
+    let perPage = this.perPage;
+    let from = (page * perPage) - perPage;
+    let to = (page * perPage);
+    return  posts.slice(from, to);
   },
-  created() {
-
+},
+computed: {
+  displayedPosts () {
+    return this.paginate(this.$store.state.wallets);
   }
+},
+watch: {
+  posts () {
+    this.setPages();
+  }
+},
+created(){
+  this.getPosts();
+},
+filters: {
+  trimWords(value){
+    return value.split(" ").splice(0,20).join(" ") + '...';
+  }
+},
 }
 </script>

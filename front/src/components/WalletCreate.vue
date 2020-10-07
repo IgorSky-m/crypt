@@ -49,7 +49,7 @@
               <i class="material-icons right">cached</i>
             </button></td>
 
-            <td>  <button class="btn waves-effect waves-light blue" type="submit" @click.prevent="saveWallet()" @click="window.location.reload()">
+            <td>  <button class="btn waves-effect waves-light blue" type="submit" @click.prevent="saveWallet()">
                 save
                 <i class="material-icons right">send</i>
               </button></td>
@@ -79,9 +79,10 @@ import WalletService from '@/service/WalletService'
     },
     saveWallet() {
       WalletService.postWallet(this.$store.state.wallet).then(response => {
-         this.$store.stat.wallet = null
+         this.$store.state.wallet = null
          console.log(this.$store.state.wallet)
-
+            this.$router.push('/home')
+            window.location.reload()
        })
        .catch(e => {
          console.log(e);

@@ -6,6 +6,14 @@ import store from '@/store/index'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    name: 'start',
+    meta: {
+      layout: 'empty'
+    },
+    component: () => import('@/views/Start.vue')
+  },
 
   {
     path: '/login',

@@ -16,7 +16,14 @@ export default new Vuex.Store({
     totalAmount : '',
     transactions: [],
     transactionDetail: {},
-    wallet: null
+    wallet: null,
+    dispWallets: [],
+
+    page: 1,
+    pageSize: 5,
+    pageCount: 0,
+    allItems: [],
+    items: [],
 
   },
   mutations: {

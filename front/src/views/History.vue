@@ -4,19 +4,15 @@
 <div class="page-title">
   <h3>History</h3>
 </div>
-<ul class="pagination">
-   <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-   <li class="active blue"><a href="#!">1</a></li>
-   <li class="waves-effect"><a href="#!">2</a></li>
-   <li class="waves-effect"><a href="#!">3</a></li>
-   <li class="waves-effect"><a href="#!">4</a></li>
-   <li class="waves-effect"><a href="#!">5</a></li>
-   <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
- </ul>
+
+
+
+
 <div class="history-chart">
 
 </div>
 <section>
+  <span>page {{page}} of {{Math.ceil(this.posts.length / this.perPage)}}</span>
   <table class="highlight">
     <thead>
 
@@ -31,7 +27,7 @@
 
     </thead>
     <tbody>
-      <tr v-for="walletTransactions in this.$store.state.transactions" :key="walletTransactions.hash">
+      <tr v-for="walletTransactions in displayedPosts" :key="walletTransactions.hash">
 
       <td>{{walletTransactions.hash}}</td>
       <td>{{walletTransactions.walletIdTo}}</td>
@@ -54,26 +50,32 @@
     </tbody>
   </table>
 
-  <paginate
-    :page-count="20"
-    :click-handler="pageChangeHandler()"
-    :prev-text="'Prev'"
-    :next-text="'Next'"
-    :container-class="'pagination'"
-    :page-class="'waves-effect'"
-    :active-class="'active blue'"
-    >
-  </paginate>
+  <ul class="pagination">
+     <li class="waves-effect page-link"><a href="#!"  v-if="page != 1" @click.prevent="page--"><i class="material-icons">chevron_left</i></a></li>
+
+     <li class="waves-effect page-link" v-for="pageNumber in pages" @click.prevent="page = pageNumber"><a href="#!">{{pageNumber}}</a></li>
+
+     <li class="waves-effect page-link" @click.prevent="page++" v-if="page < pages.length"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+   </ul>
+
+
+
 
 
 </section>
 </div>
 </template>
 <script>
+import paginationMixin from '@/mixins/pagination.mixin'
 export default {
   data: () => ({
     path: 'transaction/',
-
+    mixins: [paginationMixin],
+    posts : [''],
+			page: 1,
+			perPage: 5,
+			pages: [],
+      currentPageClass:'' ,
   }),
   methods: {
     checkStatus(status) {
@@ -86,9 +88,50 @@ export default {
     },
     showDetail(detail) {
       this.$store.state.transactionDetail = detail
+    },
+    getPosts () {
+      let data = [];
+        this.posts = this.$store.state.transactions;
 
-    }
-  }
+		},
+		setPages () {
+			let numberOfPages = Math.ceil(this.posts.length / this.perPage);
+			for (let index = 1; index <= numberOfPages; index++) {
+				this.pages.push(index);
+			}
+		},
+		paginate (posts) {
+			let page = this.page;
+			let perPage = this.perPage;
+			let from = (page * perPage) - perPage;
+			let to = (page * perPage);
+			return  posts.slice(from, to);
+		},
+    curPage() {
+      if (page) return "active"
+      return "waves-effect page-link active"
+    },
+	},
+	computed: {
+		displayedPosts () {
+			return this.paginate(this.posts);
+		}
+	},
+	watch: {
+		posts () {
+			this.setPages();
+		}
+	},
+	created(){
+		this.getPosts();
+	},
+	filters: {
+		trimWords(value){
+			return value.split(" ").splice(0,20).join(" ") + '...';
+		}
+	},
+
+
 }
 
 

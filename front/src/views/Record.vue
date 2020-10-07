@@ -37,7 +37,7 @@
             type="text"
             v-model="walletIdTo"
         >
-        <label for="description">Wallet to</label>
+        <label for="walletIdTo">Wallet to</label>
         <span
               class="helper-text invalid"></span>
       </div>
@@ -56,16 +56,16 @@
 
       <div class="input-field">
         <input
-            id="description"
+            id="walletSecretKey"
             type="text"
             v-model="secretKey"
         >
-        <label for="description">wallet signature</label>
+        <label for="walletSecretKey">wallet signature</label>
         <span
               class="helper-text invalid"></span>
       </div>
 
-      <button class="btn waves-effect waves-light blue" type="submit" @click.prevent="send">
+      <button class="btn waves-effect waves-light blue" type="submit" @click.prevent="send()">
         Create
         <i class="material-icons right">send</i>
       </button>
@@ -75,6 +75,7 @@
 
 <script>
 import BlockTransactionService from '@/service/BlockTransactionService'
+import Encoder from '@/service/Encoder'
 export default{
   name: 'newtransaction',
   data: () => ({
@@ -92,6 +93,8 @@ export default{
     this.wallets = this.$store.state.wallets,
     this.loading = false
 
+    
+
     if (this.$store.state.wallets) {
       this.wallet = this.$store.state.wallets[0]
     }
@@ -106,15 +109,23 @@ export default{
     }
   },
   methods: {
-  async send () {
+   send () {
       const Transaction = {
-        walletIdTo : this.walletIdTo,
-        secretKey : this.secretKey,
+        walletIdTo: this.walletIdTo,
+        signature: this.secretKey,
         value: this.value,
         timestamp: Date.now()
       }
 
-      const result =  BlockTransactionService.sendTransaction(Transaction)
+
+      const result =  BlockTransactionService.sendTransaction(Transaction).then(response => {
+        if (response.data.status == "APPROVED") {
+        this.$router.push('/record?=success')
+      } else {
+        this.$router.push('record?=fail')
+      }
+
+      })
 
 
 

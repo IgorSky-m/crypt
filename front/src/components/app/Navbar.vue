@@ -32,11 +32,11 @@
                 <i class="material-icons grey-text">account_circle</i>Profile
               </router-link>
             </li>
-            <li>
+            <!-- <li>
               <router-link to="/profile" class="black-text">
                 <i class="material-icons grey-text">settings</i>Settings
               </router-link>
-            </li>
+            </li> -->
             <li class="divider" tabindex="-1"></li>
             <li>
               <a href="#" class="black-text" @click.prevent="loguot">

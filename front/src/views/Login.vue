@@ -86,6 +86,7 @@ import {email, required, minLength} from 'vuelidate/lib/validators'
 import messages from '@/utills/messages'
 import axios from 'axios'
 import UserService from '@/service/UserService'
+import Encoder from '@/service/Encoder'
 export default {
   name: 'login',
   data: () => ({
@@ -139,8 +140,9 @@ export default {
 
 
     },
-    rememberMe () {
+     rememberMe () {
       this.remember = !this.remember
+      
     }
   }
 }

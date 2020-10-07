@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>Mining</h3>
-      <h4>90%</h4>
+      <h3>Coming soon</h3>
+      <h4></h4>
     </div>
 
     <section>
