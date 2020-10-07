@@ -70,14 +70,39 @@ created() {
 
       this.$store.state.totalAmount = await this.getTotalAmount()
 
-
+      let transactions = []
+      let isUnique = true;
+      let transaction;
       for(let i = 0; i < this.$store.state.wallets.length; i++ ) {
 
        await BlockTransactionService.getAllWalletTransactions(this.$store.state.wallets[i].id)
          .then(response => {
-              for (let k = 0; k < response.data.length; k++)
 
-              this.$store.state.transactions.push(response.data[k])
+              for (let k = 0; k < response.data.length; k++) {
+                transaction = response.data[k];
+                transactions.forEach(function(value)  {
+                  if (value.blockHash == transaction.blockHash &&
+                    value.hash == transaction.hash &&
+                    value.signature == transaction.signature &&
+                    value.status == transaction.status &&
+                    value.timestamp == transaction.timestamp &&
+                    value.value == transaction.value &&
+                    value.walletIdTo == transaction.walletIdTo
+                  ) {
+                    isUnique = false;
+                  }
+
+                });
+
+                if (isUnique) {
+                transactions.push(response.data[k])
+              }
+              isUnique = true;
+              // this.$store.state.transactions.push(response.data[k]);
+            }
+
+              this.$store.state.transactions = transactions;
+
 
 
           })

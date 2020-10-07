@@ -72,6 +72,7 @@ export default {
     path: 'transaction/',
     mixins: [paginationMixin],
     posts : [''],
+    unique: [],
 			page: 1,
 			perPage: 5,
 			pages: [],
@@ -91,7 +92,8 @@ export default {
     },
     getPosts () {
       let data = [];
-        this.posts = this.$store.state.transactions;
+       let uniqArr = Array.from(new Set(this.$store.state.transactions));
+        this.posts = uniqArr;
 
 		},
 		setPages () {
@@ -110,6 +112,18 @@ export default {
     curPage() {
       if (page) return "active"
       return "waves-effect page-link active"
+    },
+    getUniqTransactions(transactions) {
+      let results = [];
+
+      transactions.forEach(function (value) {
+        
+        if (results.indexOf(value) === -1) {
+            results.push(value);
+        }
+      });
+
+      return results;
     },
 	},
 	computed: {
