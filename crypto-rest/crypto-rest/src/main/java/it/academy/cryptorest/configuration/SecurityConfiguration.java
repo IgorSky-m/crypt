@@ -1,8 +1,8 @@
 package it.academy.cryptorest.configuration;
 
 import it.academy.cryptorest.component.AuthEntryPoint;
-import it.academy.cryptorest.filter.JwtFilter;
 import it.academy.cryptorest.filter.CorsFilter;
+import it.academy.cryptorest.filter.JwtFilter;
 import it.academy.cryptorest.service.CustomUserDetailsService;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +17,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -27,6 +29,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Getter
 @Setter
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private Map<String,String> roles;
+    {
+        roles = Map.of(
+                "user", "ROLE_USER",
+                "admin", "ROLE_ADMIN"
+        );
+    }
 
     @Autowired
     private AuthEntryPoint authEntryPoint;
@@ -47,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -76,14 +86,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers(HttpMethod.GET,"/rules/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
-                .antMatchers(HttpMethod.GET,"/users").hasAuthority("ROLE_USER")
+                .antMatchers(HttpMethod.GET,"/users").hasAuthority(roles.get("user"))
 
-                .antMatchers("/users/**").hasAuthority("ROLE_USER")
-//                .antMatchers(HttpMethod.OPTIONS,"/users/**").permitAll()
+                .antMatchers("/users/**").hasAuthority(roles.get("user"))
+
                 .antMatchers(HttpMethod.GET,"/generate/wallet").permitAll()
-                .antMatchers(HttpMethod.POST,"/wallets").hasAuthority("ROLE_USER")
-                .antMatchers("/wallets/**").hasAnyAuthority("ROLE_USER")
-//                .antMatchers(HttpMethod.OPTIONS,"/wallets/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/wallets").hasAuthority(roles.get("user"))
+                .antMatchers("/wallets/**").hasAnyAuthority(roles.get("user"))
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

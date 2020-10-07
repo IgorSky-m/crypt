@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -85,7 +84,7 @@ public class WalletController {
     public ResponseEntity<?> userWallets(
             @PathVariable String userId
     ){
-        if ("undefied".equals(userId)) return ResponseEntity.badRequest().build();
+        if ("undefined".equals(userId)) return ResponseEntity.badRequest().build();
         List<WalletAmount> result = service.findAllByUserId(userId);
         return ResponseEntity.ok(result);
     }

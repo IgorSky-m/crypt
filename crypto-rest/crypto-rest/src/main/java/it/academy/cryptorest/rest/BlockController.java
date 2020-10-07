@@ -2,7 +2,6 @@ package it.academy.cryptorest.rest;
 
 import it.academy.cryptorest.pojo.Block;
 import it.academy.cryptorest.service.BlockService;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

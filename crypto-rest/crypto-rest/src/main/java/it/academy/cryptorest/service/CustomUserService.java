@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Getter
 @Setter
 public class CustomUserService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Value("${check.message.if.exist}")
     private String str;
@@ -54,6 +58,8 @@ public class CustomUserService {
             try {
                 findOneById(customUser.getId());
             } catch (NotFoundException e) {
+                String encodedPassword = passwordEncoder.encode(customUser.getUserPassword());
+                customUser.setUserPassword(encodedPassword);
                 return repository.saveAndFlush(customUser);
             }
             throw new CreateException(customUser.getId(), CustomUser.class);
