@@ -1,15 +1,19 @@
 package it.academy.cryptorest.configuration;
 
-import it.academy.cryptorest.component.AuthEntryPoint;
 import it.academy.cryptorest.filter.CorsFilter;
 import it.academy.cryptorest.filter.JwtFilter;
 import it.academy.cryptorest.service.CustomUserDetailsService;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.ejb.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,16 +22,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.Map;
 
 @Configuration
-@EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Getter
 @Setter
+@EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private Map<String,String> roles;
@@ -39,14 +44,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private AuthEntryPoint authEntryPoint;
-
-    @Autowired
     private JwtFilter jwtFilter;
 
     @Autowired
     private CorsFilter corsFilter;
-
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -56,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -66,9 +67,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     }
 
-
-
-
+    @Bean
+    public CustomUserDetailsService userDetails() {
+        return new CustomUserDetailsService();
+    }
 
 
 

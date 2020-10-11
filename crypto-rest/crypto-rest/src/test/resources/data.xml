@@ -1,0 +1,20 @@
+<dataset>
+    <!--    pass 1234567-->
+    <custom_user id='e74b07c3-aa62-4783-804f-9f39aa8e4077' email_address='sir@gma.sa' mobile='0921345' user_name='testUser91' user_password='$2a$10$FPJqBm8Fgxj9.AwU3/T2YOb2tAp/Hpw8F9gBMGqNg/tneDeyg3Ubm'/>
+    <!--    pass 12345678-->
+    <custom_user id='d2f8d249-7e45-4523-bd48-e9c12913338c' email_address='testMail92@gmail.com' mobile='80291111111' user_name='testUser92' user_password='$2a$10$6rNE/aXnNqRjb9t44KdBHuTgbseRfJ5yI9YKuZJmGevgmVQ.cPSfG'/>
+    <!--    pass abc12345678-->
+    <custom_user id='50745257-bcf0-45f8-a1f2-34b0842bc3c7' email_address='testMail93@mail.ru' mobile='7772323' user_name='testUser93' user_password='$2a$10$hOUUVtjk2tjYACbL8BPAh.2LxhnhwqScrcXZWakwXhRximtYlZW6e'/>
+
+    <block block_hash='0' block_data_hash='0' previous_block_hash='0' timestamp='0' nonce='0'/>
+
+    <custom_user_role id='0' user_role='USER'/>
+    <custom_user_role id='1' user_role='ADMIN'/>
+
+    <custom_user_custom_user_roles custom_user_id='e74b07c3-aa62-4783-804f-9f39aa8e4077' custom_user_roles_id='0'/>
+    <custom_user_custom_user_roles custom_user_id='d2f8d249-7e45-4523-bd48-e9c12913338c' custom_user_roles_id='0'/>
+    <custom_user_custom_user_roles custom_user_id='50745257-bcf0-45f8-a1f2-34b0842bc3c7' custom_user_roles_id='1'/>
+
+
+
+</dataset>

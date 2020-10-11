@@ -38,7 +38,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtUtil jwtTokenUtil;
+    private JwtUtil jwtUtil;
 
 
     @CrossOrigin
@@ -58,7 +58,7 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"invalid login or password");
         }
 
-        final String jwt = jwtTokenUtil.generateToken((UserDetails) authentication.getPrincipal());
+        final String jwt = jwtUtil.generateToken((UserDetails) authentication.getPrincipal());
         return new AuthResponse(jwt);
     }
 

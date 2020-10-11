@@ -24,7 +24,7 @@ public class CustomUserAspect {
     private String str;
 
     @Autowired
-    private CustomUserRepository repository;
+    private CustomUserRepository customUserRepository;
 
 
     @Pointcut("@annotation(UserParamCheck) && args(customUser,..)")
@@ -40,16 +40,16 @@ public class CustomUserAspect {
     @Before("methodPoint(customUser)")
     public CustomUser checkUser(CustomUser customUser) {
         checkStatus = true;
-        if (repository.findByUserName(customUser.getUserName()) != null) {
+        if (customUserRepository.findByUserName(customUser.getUserName()) != null) {
             customUser.setUserName(str);
             checkStatus = false;
         }
-        if(repository.findByEmailAddress(customUser.getEmailAddress()) != null) {
+        if(customUserRepository.findByEmailAddress(customUser.getEmailAddress()) != null) {
             customUser.setEmailAddress(str);
             if (checkStatus) checkStatus = false;
         }
 
-        if (repository.findByMobile(customUser.getMobile()) != null) {
+        if (customUserRepository.findByMobile(customUser.getMobile()) != null) {
             customUser.setMobile(str);
             if (checkStatus) checkStatus = false;
         }

@@ -14,7 +14,7 @@ import java.util.Set;
 @ToString
 @Builder
 public class CustomUser implements Serializable {
-//Изменить имя на кастомное
+
     @Id
     private String id;
 

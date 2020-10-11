@@ -38,13 +38,13 @@ public class CustomUserController {
 
 
     @Autowired
-    private CustomUserService service;
+    private CustomUserService customUserService;
 
     @GetMapping("/users")
     public CollectionModel<EntityModel<CustomUser>> all(){
         return CollectionModel.of(
-                service.findAll().stream()
-                .map(service::toEntityModel)
+                customUserService.findAll().stream()
+                .map(customUserService::toEntityModel)
                 .collect(Collectors.toList())
         );
     }
@@ -54,8 +54,8 @@ public class CustomUserController {
             @PathVariable String id
     ){
 
-        CustomUser customUser = service.findOneById(id);
-        return service.toEntityModel(customUser);
+        CustomUser customUser = customUserService.findOneById(id);
+        return customUserService.toEntityModel(customUser);
     }
 
 
@@ -67,8 +67,8 @@ public class CustomUserController {
     ) {
 
             String userName = jwtUtil.getUsernameFromHttpRequest(request);
-            CustomUser user = service.findUserByName(userName);
-            return ResponseEntity.status(HttpStatus.OK).body(service.toEntityModel(user));
+            CustomUser user = customUserService.findUserByName(userName);
+            return ResponseEntity.status(HttpStatus.OK).body(customUserService.toEntityModel(user));
     }
 
 
@@ -89,11 +89,11 @@ public class CustomUserController {
                     .build())
             );
 
-            CustomUser savedCustomUser = service.create(customUser);
+            CustomUser savedCustomUser = customUserService.create(customUser);
 
             return ResponseEntity.created(
                     linkTo(methodOn(CustomUserController.class).one(savedCustomUser.getId())).toUri()
-            ).body(service.toEntityModel(customUser));
+            ).body(customUserService.toEntityModel(customUser));
         }
         return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(customUser);
     }
@@ -105,8 +105,8 @@ public class CustomUserController {
             @RequestBody CustomUser customUser
     ){
 
-        CustomUser savedCustomUser = service.update(id, customUser);
-        return ResponseEntity.ok(service.toEntityModel(savedCustomUser));
+        CustomUser savedCustomUser = customUserService.update(id, customUser);
+        return ResponseEntity.ok(customUserService.toEntityModel(savedCustomUser));
     }
 
 
@@ -115,10 +115,16 @@ public class CustomUserController {
             @PathVariable String id
     ){
 
-        CustomUser deletedCustomUser = service.findOneById(id);
-        service.deleteById(id);
-        return ResponseEntity.ok(service.toEntityModel(deletedCustomUser));
+        CustomUser deletedCustomUser = customUserService.findOneById(id);
+        customUserService.deleteById(id);
+        return ResponseEntity.ok(customUserService.toEntityModel(deletedCustomUser));
 
+    }
+
+
+    @ExceptionHandler(RuntimeException.class)
+    public final ResponseEntity<Exception> handleAllExceptions(RuntimeException runtimeException) {
+        return new ResponseEntity<>(runtimeException, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
