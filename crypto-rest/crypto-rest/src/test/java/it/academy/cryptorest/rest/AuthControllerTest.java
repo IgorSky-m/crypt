@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthControllerTest extends TestDatabaseManagerImpl{
+public class AuthControllerTest extends TestDatabaseDBUnitManagerImpl {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +48,7 @@ public class AuthControllerTest extends TestDatabaseManagerImpl{
     }
 
     @Test
-    public void authValidData() throws Exception {
+    public void authWithValidData() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         StringWriter stringWriter = new StringWriter();
@@ -92,6 +92,120 @@ public class AuthControllerTest extends TestDatabaseManagerImpl{
         assertEquals(20,tokenParts[0].length());
         assertEquals(72,tokenParts[1].length());
         assertEquals(86,tokenParts[2].length());
+    }
+
+    @Test
+    public void authWithInvalidData() throws Exception {
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            StringWriter stringWriter = new StringWriter();
+            objectMapper.writeValue(stringWriter, AuthRequest.builder()
+                    .name("invalidData")
+                    .password("invalidData")
+                    .build());
+
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+                    .content(stringWriter.toString())
+                    .header("Origin", testUrl)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andReturn();
+
+            int responseStatus = result
+                    .getResponse()
+                    .getStatus();
+
+
+
+            assertEquals(401,responseStatus);
+
+
+
+    }
+
+    @Test
+    public void authWithEmptyFields() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        StringWriter stringWriter = new StringWriter();
+        objectMapper.writeValue(stringWriter, AuthRequest.builder()
+                .name("")
+                .password("")
+                .build());
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+                .content(stringWriter.toString())
+                .header("Origin", testUrl)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        int responseStatus = result
+                .getResponse()
+                .getStatus();
+
+
+
+        assertEquals(401,responseStatus);
+
+    }
+
+    @Test
+    public void authWithNullFields() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        StringWriter stringWriter = new StringWriter();
+        objectMapper.writeValue(stringWriter, AuthRequest.builder()
+                .name(null)
+                .password(null)
+                .build());
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+                .content(stringWriter.toString())
+                .header("Origin", testUrl)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        int responseStatus = result
+                .getResponse()
+                .getStatus();
+
+
+
+        assertEquals(401,responseStatus);
+    }
+
+    @Test
+    public void authWithEmptyRequest() throws Exception {
+        String content = "";
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+                .content(content)
+                .header("Origin", testUrl)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        int responseStatus = result
+                .getResponse()
+                .getStatus();
+
+
+
+        assertEquals(400,responseStatus);
+    }
+
+    @Test
+    public void authWithEmptyData() throws Exception {
+        String content = "{}";
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/authenticate")
+                .content(content)
+                .header("Origin", testUrl)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        int responseStatus = result
+                .getResponse()
+                .getStatus();
+
+
+
+        assertEquals(401,responseStatus);
     }
 
 }

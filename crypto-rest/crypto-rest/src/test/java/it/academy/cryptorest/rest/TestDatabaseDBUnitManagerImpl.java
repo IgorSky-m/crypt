@@ -3,6 +3,7 @@ package it.academy.cryptorest.rest;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import it.academy.cryptorest.exception.DatabaseManagerException;
 import lombok.Getter;
+import lombok.Setter;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -16,7 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.SQLException;
 @Getter
-public abstract class TestDatabaseManagerImpl implements TestDatabaseManager {
+@Setter
+public abstract class TestDatabaseDBUnitManagerImpl implements TestDatabaseDBUnitManager {
 
     @Value("${spring.datasource.url}")
     private String url;

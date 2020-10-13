@@ -13,7 +13,7 @@ import org.dbunit.operation.DatabaseOperation;
 
 import java.sql.SQLException;
 
-public interface TestDatabaseManager {
+public interface TestDatabaseDBUnitManager {
 
     void cleanInsertData();
 

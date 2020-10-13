@@ -26,8 +26,6 @@ class CryptoRestApplicationTests {
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 
-
-
 	@Test
 	void contextLoads() {
 	}
