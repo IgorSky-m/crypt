@@ -62,7 +62,7 @@ public class CustomUserController {
 
 
     @GetMapping("/users/info")
-    public ResponseEntity<?> oneByName (
+    public ResponseEntity<?> oneByToken(
             HttpServletRequest request, HttpServletResponse response
     ) {
 
@@ -99,7 +99,7 @@ public class CustomUserController {
     }
 
 
-    @PutMapping("/users/{id}/update")
+    @PutMapping("/users/{id}")
     public ResponseEntity<EntityModel<CustomUser>> update(
             @PathVariable String id,
             @RequestBody CustomUser customUser

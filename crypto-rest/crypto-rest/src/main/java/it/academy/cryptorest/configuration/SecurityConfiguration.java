@@ -95,6 +95,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/generate/wallet").permitAll()
                 .antMatchers(HttpMethod.POST,"/wallets").hasAuthority(roles.get("user"))
                 .antMatchers("/wallets/**").hasAnyAuthority(roles.get("user"))
+                .antMatchers("/images/**").hasAuthority(roles.get("user"))
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

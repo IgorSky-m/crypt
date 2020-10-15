@@ -81,7 +81,10 @@ public class CustomUserService {
                     .equals(updatedCustomUser.getUserName()) &&
                     customUser.getUserName() != null) updatedCustomUser.setUserName(customUser.getUserName());
             if (!customUser.getUserPassword().equals(updatedCustomUser.getUserPassword()) &&
-                    customUser.getUserPassword() != null) updatedCustomUser.setUserPassword(customUser.getUserPassword());
+                    customUser.getUserPassword() != null) {
+                String encodedPassword = passwordEncoder.encode(customUser.getUserPassword());
+                updatedCustomUser.setUserPassword(encodedPassword);
+            }
 
         }
         return repository.save(updatedCustomUser);
