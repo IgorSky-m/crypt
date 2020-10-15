@@ -12,12 +12,14 @@ export default new Vuex.Store({
     token: localStorage.getItem('token'),
     isAuth: localStorage.getItem('isAuth'),
     user : {},
+    avatar: '',
     wallets: [],
     totalAmount : '',
     transactions: [],
     transactionDetail: {},
     wallet: null,
     dispWallets: [],
+
 
     page: 1,
     pageSize: 5,

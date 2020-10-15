@@ -22,7 +22,10 @@ class UserService {
 
  }
 
-
+ updateAvatar(id, avatar){
+   return http.post(`/images/${id}`)
+   // avatar.getBYtes???? написать
+ }
 
   hello() {
     return http.get("/hello")
